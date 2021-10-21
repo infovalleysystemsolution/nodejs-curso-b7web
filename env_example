@@ -1,3 +1,5 @@
+#change setting and name this file for .env
+
 PORT=4000
 
 PG_DB=name_bd
