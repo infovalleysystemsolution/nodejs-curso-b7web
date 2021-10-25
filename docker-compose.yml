@@ -1,0 +1,42 @@
+version: "3.7"
+services:
+  postgres:
+    image: postgres:13
+    container_name: postgresql-db
+    restart: always
+    environment:
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_USER=postgres
+      # - POSTGRES_DB=mydatabase
+    volumes:
+      #- /mnt/HD/volumes/postgres-data:/var/lib/postgresql/data
+      #- /mnt/HD/shared:/shared
+      - /var/dockervolumes/bdpostgresql:/var/lib/postgresql/data
+    networks:
+      allapps_default:
+          ipv4_address: 192.168.100.3
+    ports: 
+      - "5432:5432"
+
+  nodejs-curso-b7web:
+    image: moizesdocker/nodejs14:1.0
+    container_name: nodejs-curso-b7web-app
+    working_dir: /nodejs-curso-b7web-app
+    #           restart: unless-stopped
+    #command: npm install
+    command: npm run start-dev
+    depends_on:
+      - postgres
+    links:
+      - postgres
+    ports:
+      - 4004:4004
+    networks:
+      allapps_default:
+          ipv4_address: 192.168.100.81
+    volumes:
+      - ./:/nodejs-curso-b7web-app
+
+networks:
+  allapps_default:        
+      external: true
